@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import cvxpy as cp
 import numpy as np
+import matplotlib.pyplot as plt
 
 from clustering import final_df
 
@@ -150,6 +151,23 @@ for portfolio in portfolios:
         'K-ratio': k_ratio
     })
 
+    # Plot VAWI for each portfolio
+    plt.figure()
+    plt.plot(vawi)
+    plt.title(f'Cluster {portfolio["Cluster"]} - VAWI')
+    plt.xlabel('Week')
+    plt.ylabel('VAWI')
+    plt.savefig(f'output/vawi_cluster_{portfolio["Cluster"]}.png')
+
+    # Plot portfolio weights for each cluster
+    plt.figure()
+    plt.bar(portfolio['Tickers'], portfolio['Weights'])
+    plt.title(f'Cluster {portfolio["Cluster"]} - Portfolio Weights')
+    plt.xlabel('Assets')
+    plt.ylabel('Weights')
+    plt.xticks(rotation=45)
+    plt.savefig(f'output/weights_cluster_{portfolio["Cluster"]}.png')
+
 # Save the final DataFrame and portfolios to a new CSV file
 output_file_path = 'output/risk_return_esg_clusters_output.csv'
 final_df.to_csv(output_file_path, index=False)
@@ -167,3 +185,4 @@ vawi_df.to_csv(vawi_output_file_path, index=False)
 print(f"Risk, return, ESG scores, and cluster data have been calculated and saved to '{output_file_path}'")
 print(f"Minimum risk portfolios have been calculated and saved to '{portfolios_output_file_path}'")
 print(f"VAWI and K-ratio data have been calculated and saved to '{vawi_output_file_path}'")
+print("Charts have been saved to the output directory")
